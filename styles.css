@@ -1,0 +1,45 @@
+
+/* Set basic styles for body and html */
+body, html {
+    height: 100%;
+    margin: 0; /* Remove default margin */
+    padding: 0; /* Remove default padding */
+}
+
+/* Center content vertically and horizontally */
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+/* Limit the maximum width of the form container , avoid it getting too long*/
+.form-container {
+    max-width: 400px;
+}
+
+/* Style for login and register forms */
+.form-card {
+    background-color: white; /* White background */
+    padding: 20px; /* Padding inside the form */
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); /* Add shadow effect */
+}
+
+/* Style for form titles with Heading 1*/
+.form-title {
+    text-align: center; /* Center align the title */
+    margin-bottom: 1.5rem; /* Add margin bottom */
+}
+
+/* Style for form inputs */
+.form-control {
+    width: 100%; /* Take up full width */
+    margin-bottom: 1rem; /* Add margin bottom */
+}
+
+/* Style for form links */
+.form-link {
+    text-align: center; /* Center align the link */
+}
