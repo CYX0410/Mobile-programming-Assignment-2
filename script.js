@@ -180,6 +180,44 @@ $(document).ready(function(){
                 loadExpenses();
             });
         
+            $("#generateChartBtn").click(function() {
+                var expenses = JSON.parse(localStorage.getItem(currentUser + '_expenses')) || [];
+                var monthlyTotals = {};
+        
+                expenses.forEach(function(expense) {
+                    var month = moment(expense.date).format('YYYY-MM');
+                    if (!monthlyTotals[month]) {
+                        monthlyTotals[month] = 0;
+                    }
+                    monthlyTotals[month] += parseFloat(expense.amount);
+                });
+        
+                var labels = Object.keys(monthlyTotals).sort();
+                var data = labels.map(month => monthlyTotals[month]);
+        
+                var ctx = document.getElementById('monthlyExpenseChart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Monthly Expenses',
+                            data: data,
+                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            });
+            
             if (currentUser) {
                 loadExpenses();
             } else if (window.location.pathname.includes('expenses.html')) {
