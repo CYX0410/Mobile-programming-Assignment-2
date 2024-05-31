@@ -203,21 +203,79 @@ $(document).ready(function(){
                         datasets: [{
                             label: 'Monthly Expenses',
                             data: data,
-                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                            borderColor: 'rgba(75, 192, 192, 1)',
+                            backgroundColor: 'rgba(255, 165, 0)',
+                            borderColor: 'rgba(255, 99, 71)',
                             borderWidth: 1
                         }]
                     },
                     options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
                         scales: {
                             y: {
-                                beginAtZero: true
+                                beginAtZero: true,
+                                ticks: {
+                                    font: {
+                                        size: 16, // Increase font size for y-axis
+                                        weight: 'bold' // Make text bold
+                                    },
+                                    color: '#000', // Change text color
+                                },
+                                title: {
+                                    display: true,
+                                    text: 'Amount ($)',
+                                    font: {
+                                        size: 18,
+                                        weight: 'bold'
+                                    },
+                                    color: '#000'
+                                }
+                            },
+                            x: {
+                                ticks: {
+                                    font: {
+                                        size: 16, // Increase font size for x-axis
+                                        weight: 'bold' // Make text bold
+                                    },
+                                    color: '#000', // Change text color
+                                },
+                                title: {
+                                    display: true,
+                                    text: 'Month',
+                                    font: {
+                                        size: 18,
+                                        weight: 'bold'
+                                    },
+                                    color: '#000'
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                display: true,
+                                labels: {
+                                    font: {
+                                        size: 16, // Increase font size for legend
+                                        weight: 'bold' // Make text bold
+                                    },
+                                    color: '#000' // Change text color
+                                }
+                            },
+                            title: {
+                                display: true,
+                                text: 'Monthly Expenses',
+                                font: {
+                                    size: 20,
+                                    weight: 'bold'
+                                },
+                                color: '#000'
                             }
                         }
                     }
                 });
             });
-            
+        
+
             if (currentUser) {
                 loadExpenses();
             } else if (window.location.pathname.includes('expenses.html')) {

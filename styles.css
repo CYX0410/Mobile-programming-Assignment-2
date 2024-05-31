@@ -55,4 +55,16 @@
     font-size: 1.2em;
     margin-bottom: 20px;
 }
+#summTab{
+    background-color: #f3f3f3;
+}
+
+body {
+    background-image: url('expic.webp');
+    background-size: cover;         /* Ensures the image covers the entire background */
+    background-position: center;    /* Centers the image */
+    background-repeat: no-repeat;   /* Prevents the image from repeating */
+    background-attachment: fixed;   /* Keeps the image fixed when scrolling */
+    background-color: #f3f3f3;      /* Fallback background color in case the image doesn't load */
+}
 
