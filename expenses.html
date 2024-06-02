@@ -6,20 +6,52 @@
     <title>Expense Tracker</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        .container {
+            max-width: 100%;
+            padding: 20px;
+        }
+        .form-title {
+            margin-bottom: 20px;
+        }
+        .text-white label {
+            color: white;
+        }
+        .btn-block {
+            width: 100%;
+        }
+        .d-flex {
+            flex-wrap: wrap;
+        }
+        .chart-container {
+            overflow-x: auto; /* Enable horizontal scroll if necessary */
+            width: 100%;
+        }
+        canvas {
+            width: 100%; /* Make the canvas responsive */
+            height: auto; /* Keep the aspect ratio */
+            min-height: 400px; /* Set a minimum height for the canvas */
+        }
+    </style>
 </head>
 <body>
     <div class="container">
         <h1 class="form-title text-center" id="exp2">Expense Tracker</h1>
         <form id="expenseForm" class="mb-4">
-            <div class="form-group, text-white">
+            <div class="form-group text-white">
                 <label for="amount">Amount</label>
                 <input type="number" class="form-control" id="amount" placeholder="Enter amount" required>
             </div>
-            <div class="form-group, text-white">
+            <div class="form-group text-white">
                 <label for="date">Date</label>
                 <input type="date" class="form-control" id="date" required>
             </div>
-            <div class="form-group, text-white">
+            <div class="form-group text-white">
                 <label for="description">Description</label>
                 <input type="text" class="form-control" id="description" placeholder="Enter description" required>
             </div>
@@ -43,28 +75,29 @@
             </tbody>
         </table>
         <div class="d-flex justify-content-center mt-3">
-            <label for="monthSelect">Select Month:</label>
-        <select id="monthSelect">
-            <option value="all">Overall</option>
-            <option value="2024-01">January</option>
-            <option value="2024-02">February</option>
-            <option value="2024-03">March</option>
-            <option value="2024-04">April</option>
-            <option value="2024-05">May</option>
-            <option value="2024-06">June</option>
-            <option value="2024-07">July</option>
-            <option value="2024-08">August</option>
-            <option value="2024-09">September</option>
-            <option value="2024-10">October</option>
-            <option value="2024-11">November</option>
-            <option value="2024-12">December</option>
-            <!-- Dynamic month options will be added here -->
-        </select>
-            <button id="generateChartBtn" class="btn btn-secondary">Generate Monthly Expense Chart</button>
-        </div>   
+            <label for="monthSelect" class="mr-2">Select Month:</label>
+            <select id="monthSelect" class="form-control mr-2">
+                <option value="all">Overall</option>
+                <option value="2024-01">January</option>
+                <option value="2024-02">February</option>
+                <option value="2024-03">March</option>
+                <option value="2024-04">April</option>
+                <option value="2024-05">May</option>
+                <option value="2024-06">June</option>
+                <option value="2024-07">July</option>
+                <option value="2024-08">August</option>
+                <option value="2024-09">September</option>
+                <option value="2024-10">October</option>
+                <option value="2024-11">November</option>
+                <option value="2024-12">December</option>
+                <!-- Dynamic month options will be added here -->
+            </select>
+        </div> 
+        <br>  
+        <button id="generateChartBtn" class="btn btn-secondary">Generate Monthly Expense Chart</button>
         <!-- Centered canvas for Chart.js -->
-        <div class="text-center mt-3">
-            <canvas id="monthlyExpenseChart" width="800" height="400"></canvas>
+        <div class="chart-container text-center mt-3">
+            <canvas id="monthlyExpenseChart"></canvas>
         </div>
         <button id="logoutButton" class="btn btn-secondary btn-block">Logout</button>
     </div>
