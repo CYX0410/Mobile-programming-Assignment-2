@@ -1,38 +1,25 @@
-// script.js
-
-$(document).ready(function(){
-    // Retrieve registered users from localStorage or initialize an empty array
+$(document).ready(function() {
     var registeredUsers = JSON.parse(localStorage.getItem('registeredUsers')) || [];
     var currentUser = localStorage.getItem('currentUser');
 
-    // Event handler for showing the register form when the button is click and also hide the register form
-    $("#showRegisterFormLink").click(function(event){
+    $("#showRegisterFormLink").click(function(event) {
         event.preventDefault();
         $("#loginForm").hide();
         $("#registerForm").show();
     });
 
-    // Event handler for showing the login form when the button is click and also hid the login form
-    $("#showLoginFormLink").click(function(event){
-    /*This sets up a click event handler for the element with the ID showRegisterFormLink. When this 
-    element is clicked, the function inside the event handler will be executed.javascript*/
+    $("#showLoginFormLink").click(function(event) {
         event.preventDefault();
-        /*This prevents the default behavior of the event, which is typically to navigate to a new 
-        page when clicking a link. In this case, it prevents the default link behavior.*/
         $("#registerForm").hide();
         $("#loginForm").show();
     });
 
-    // Event handler for submitting the login form
-    //Will only proceed to next event if successfully login
-    //This need to be mainly focuses
-    $("#loginForm").submit(function(event){
+    $("#loginForm").submit(function(event) {
         event.preventDefault();
-        var userId = $("#loginUserId").val(); //Get the id value that have input in the field
-        var password = $("#loginPassword").val(); //Get the password value that have input in the field
+        var userId = $("#loginUserId").val();
+        var password = $("#loginPassword").val();
         var user = registeredUsers.find(user => user.userId === userId && user.password === password);
-        //The above line searches for a user in the registeredUsers array whose user ID and password match the entered values.javascript
-        if(user) {
+        if (user) {
             localStorage.setItem('currentUser', userId);
             window.location.href = 'expenses.html';
             alert("Successfully Login");
@@ -41,32 +28,27 @@ $(document).ready(function(){
         }
     });
 
-    // Event handler for submitting the register form
-    $("#registerForm").submit(function(event){
+    $("#registerForm").submit(function(event) {
         event.preventDefault();
-        var userId = $("#registerUserId").val();//Get the value that have input by the user
-        var password = $("#registerPassword").val();//Get the value that have input by the user
-        var userExists = registeredUsers.some(user => user.userId === userId); //Check if the userID is registered in the system
-        if(userExists) { //if some() return bolean value of true then produce warning
+        var userId = $("#registerUserId").val();
+        var password = $("#registerPassword").val();
+        var userExists = registeredUsers.some(user => user.userId === userId);
+        if (userExists) {
             alert("User ID already exists. Please choose a different User ID.");
-        } else { //if not registered then push and set item to save at local storage using JSON.stringify()
+        } else {
             registeredUsers.push({ userId: userId, password: password });
-            localStorage.setItem('registeredUsers', JSON.stringify(registeredUsers));//Convert to string in order to save in the localStorage
-            alert("Registration successful!");//Produced alert when successsful
-            $("#registerForm").hide();//Hide the registerform and return to login form
+            localStorage.setItem('registeredUsers', JSON.stringify(registeredUsers));
+            alert("Registration successful!");
+            $("#registerForm").hide();
             $("#loginForm").show();
         }
     });
-    // Handle logout
+
     $("#logoutButton").click(function() {
         localStorage.removeItem('currentUser');
         window.location.href = 'index.html';
     });
 
-
-
-
-    //ANYTHING BELOW NEED TO BE ANALYZE
     // Handle expense form submission
     $("#expenseForm").submit(function(event) {
         event.preventDefault();
@@ -96,7 +78,6 @@ $(document).ready(function(){
     }
 
     function updateSummary(expenses) {
-        // Group expenses by month
         var monthlyExpenses = {};
         expenses.forEach(function(expense) {
             var month = expense.date.substring(0, 7); // Extract YYYY-MM format
@@ -105,180 +86,215 @@ $(document).ready(function(){
             }
             monthlyExpenses[month].push(expense);
         });
-    
-        // Sort months in ascending order
+
         var sortedMonths = Object.keys(monthlyExpenses).sort();
-    
-        // Populate summary table
+
         var expenseSummaryTable = $("#expenseSummaryTable");
         expenseSummaryTable.empty();
-        var totalAllExpenses = 0; // Total expenses for all months
+        var totalAllExpenses = 0; 
         sortedMonths.forEach(function(month) {
             var totalExpenses = 0;
             var monthExpenses = monthlyExpenses[month];
             monthExpenses.forEach(function(expense) {
                 totalExpenses += parseFloat(expense.amount);
             });
-            totalAllExpenses += totalExpenses; // Add to total expenses for all months
+            totalAllExpenses += totalExpenses;
             var summaryRow = `<tr>
                 <th colspan="3">${month} Total Expenses: $${totalExpenses.toFixed(2)}</th>
             </tr>`;
-            expenseSummaryTable.append(summaryRow); // Append month summary row
+            expenseSummaryTable.append(summaryRow);
             monthExpenses.forEach(function(expense) {
                 var expenseRow = `<tr>
                     <td>${expense.date}</td>
                     <td>${expense.description}</td>
                     <td>$${expense.amount}</td>
                 </tr>`;
-                expenseSummaryTable.append(expenseRow); // Append expense row
+                expenseSummaryTable.append(expenseRow);
             });
         });
-    
-        // Add total expenses for all months row
+
         var totalExpensesRow = `<tr>
             <th colspan="3">Total Expenses (All Months): $${totalAllExpenses.toFixed(2)}</th>
         </tr>`;
         expenseSummaryTable.append(totalExpensesRow);
     }
-    
 
-               
-            // Handle delete expense
-            $("#expenseList").on("click", ".delete-btn", function() {
-                var index = $(this).data("index");
-                var expenses = JSON.parse(localStorage.getItem(currentUser + '_expenses')) || [];
-                expenses.splice(index, 1);
-                localStorage.setItem(currentUser + '_expenses', JSON.stringify(expenses));
-                loadExpenses(); // Reload expenses after deletion
+    $("#expenseList").on("click", ".delete-btn", function() {
+        var index = $(this).data("index");
+        var expenses = JSON.parse(localStorage.getItem(currentUser + '_expenses')) || [];
+        expenses.splice(index, 1);
+        localStorage.setItem(currentUser + '_expenses', JSON.stringify(expenses));
+        loadExpenses();
+    });
+
+    $("#expenseList").on("click", ".edit-btn", function() {
+        var index = $(this).data("index");
+        var expenses = JSON.parse(localStorage.getItem(currentUser + '_expenses')) || [];
+        var expense = expenses[index];
+        $("#editAmount").val(expense.amount);
+        $("#editDate").val(expense.date);
+        $("#editDescription").val(expense.description);
+        $("#editExpenseForm").data("index", index);
+        $("#editExpenseModal").modal("show");
+    });
+
+    $("#editExpenseForm").submit(function(event) {
+        event.preventDefault();
+        var index = $(this).data("index");
+        var expenses = JSON.parse(localStorage.getItem(currentUser + '_expenses')) || [];
+        expenses[index] = {
+            amount: $("#editAmount").val(),
+            date: $("#editDate").val(),
+            description: $("#editDescription").val()
+        };
+        localStorage.setItem(currentUser + '_expenses', JSON.stringify(expenses));
+        $("#editExpenseModal").modal("hide");
+        alert("Expense updated!");
+        loadExpenses();
+    });
+
+    if (currentUser) {
+        loadExpenses();
+    } else if (window.location.pathname.includes('expenses.html')) {
+        window.location.href = 'index.html';
+    }
+
+    $("#generateChartBtn").click(function() {
+        var selectedMonth = $('#monthSelect').val();
+        var expenses = JSON.parse(localStorage.getItem(currentUser + '_expenses')) || [];
+        var monthlyTotals = {};
+        var labels = [];
+        var data = [];
+
+        if (selectedMonth === 'all') {
+            var months = ["2024-01", "2024-02", "2024-03", "2024-04", "2024-05", "2024-06", 
+                          "2024-07", "2024-08", "2024-09", "2024-10", "2024-11", "2024-12"];
+            months.forEach(month => {
+                monthlyTotals[month] = 0;
             });
-        
-            // Handle edit expense
-            $("#expenseList").on("click", ".edit-btn", function() {
-                var index = $(this).data("index");
-                var expenses = JSON.parse(localStorage.getItem(currentUser + '_expenses')) || [];
-                var expense = expenses[index];
-                $("#editAmount").val(expense.amount);
-                $("#editDate").val(expense.date);
-                $("#editDescription").val(expense.description);
-                $("#editExpenseForm").data("index", index);
-                $("#editExpenseModal").modal("show");
+
+            expenses.forEach(function(expense) {
+                var month = moment(expense.date).format('YYYY-MM');
+                if (!monthlyTotals[month]) {
+                    monthlyTotals[month] = 0;
+                }
+                monthlyTotals[month] += parseFloat(expense.amount);
             });
-        
-            // Save edited expense
-            $("#editExpenseForm").submit(function(event) {
-                event.preventDefault();
-                var index = $(this).data("index");
-                var expenses = JSON.parse(localStorage.getItem(currentUser + '_expenses')) || [];
-                expenses[index] = {
-                    amount: $("#editAmount").val(),
-                    date: $("#editDate").val(),
-                    description: $("#editDescription").val()
-                };
-                localStorage.setItem(currentUser + '_expenses', JSON.stringify(expenses));
-                $("#editExpenseModal").modal("hide");
-                alert("Expense updated!");
-                loadExpenses();
-            });
-        
-            $("#generateChartBtn").click(function() {
-                var expenses = JSON.parse(localStorage.getItem(currentUser + '_expenses')) || [];
-                var monthlyTotals = {};
-        
-                expenses.forEach(function(expense) {
-                    var month = moment(expense.date).format('YYYY-MM');
-                    if (!monthlyTotals[month]) {
-                        monthlyTotals[month] = 0;
-                    }
+
+            labels = Object.keys(monthlyTotals).sort();
+            data = labels.map(month => monthlyTotals[month]);
+        } else {
+            monthlyTotals[selectedMonth] = 0;
+
+            expenses.forEach(function(expense) {
+                var month = moment(expense.date).format('YYYY-MM');
+                if (month === selectedMonth) {
                     monthlyTotals[month] += parseFloat(expense.amount);
-                });
+                }
+            });
+
+            labels = [selectedMonth];
+            data = [monthlyTotals[selectedMonth]];
+        }
+
+        console.log('Selected Month:', selectedMonth);
+        console.log('Labels:', labels);
+        console.log('Data:', data);
+        console.log('Monthly Totals:', monthlyTotals);
+
+        var ctx = document.getElementById('monthlyExpenseChart').getContext('2d');
         
-                var labels = Object.keys(monthlyTotals).sort();
-                var data = labels.map(month => monthlyTotals[month]);
-        
-                var ctx = document.getElementById('monthlyExpenseChart').getContext('2d');
-                new Chart(ctx, {
-                    type: 'bar',
-                    data: {
-                        labels: labels,
-                        datasets: [{
-                            label: 'Monthly Expenses',
-                            data: data,
-                            backgroundColor: 'rgba(255, 165, 0)',
-                            borderColor: 'rgba(255, 99, 71)',
-                            borderWidth: 1
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        scales: {
-                            y: {
-                                beginAtZero: true,
-                                ticks: {
-                                    font: {
-                                        size: 16, // Increase font size for y-axis
-                                        weight: 'bold' // Make text bold
-                                    },
-                                    color: '#000', // Change text color
-                                },
-                                title: {
-                                    display: true,
-                                    text: 'Amount ($)',
-                                    font: {
-                                        size: 18,
-                                        weight: 'bold'
-                                    },
-                                    color: '#000'
-                                }
+        if(window.myChart instanceof Chart) {
+            window.myChart.destroy();
+        }
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Monthly Expenses',
+                    data: data,
+                    backgroundColor: 'rgba(255, 165, 0, 0.6)',
+                    borderColor: 'rgba(255, 99, 71, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            font: {
+                                size: 16,
+                                weight: 'bold'
                             },
-                            x: {
-                                ticks: {
-                                    font: {
-                                        size: 16, // Increase font size for x-axis
-                                        weight: 'bold' // Make text bold
-                                    },
-                                    color: '#000', // Change text color
-                                },
-                                title: {
-                                    display: true,
-                                    text: 'Month',
-                                    font: {
-                                        size: 18,
-                                        weight: 'bold'
-                                    },
-                                    color: '#000'
-                                }
-                            }
+                            color: '#000',
                         },
-                        plugins: {
-                            legend: {
-                                display: true,
-                                labels: {
-                                    font: {
-                                        size: 16, // Increase font size for legend
-                                        weight: 'bold' // Make text bold
-                                    },
-                                    color: '#000' // Change text color
-                                }
+                        title: {
+                            display: true,
+                            text: 'Amount ($)',
+                            font: {
+                                size: 18,
+                                weight: 'bold'
                             },
-                            title: {
-                                display: true,
-                                text: 'Monthly Expenses',
-                                font: {
-                                    size: 20,
-                                    weight: 'bold'
-                                },
-                                color: '#000'
-                            }
+                            color: '#000'
+                        },
+                        suggestedMin: 0,
+                        suggestedMax: data.length ? Math.max(...data) + 10 : 10
+                    },
+                    x: {
+                        ticks: {
+                            font: {
+                                size: 16,
+                                weight: 'bold'
+                            },
+                            color: '#000',
+                        },
+                        title: {
+                            display: true,
+                            text: 'Month',
+                            font: {
+                                size: 18,
+                                weight: 'bold'
+                            },
+                            color :'#000'
                         }
                     }
-                });
-            });
-        
-
-            if (currentUser) {
-                loadExpenses();
-            } else if (window.location.pathname.includes('expenses.html')) {
-                window.location.href = 'index.html';
+                },
+                plugins: {
+                    legend: {
+                        display: true,
+                        labels: {
+                            font: {
+                                size: 16, // Increase font size for legend
+                                weight: 'bold' // Make text bold
+                            },
+                            color: '#000' // Change text color
+                        }
+                    },
+                    title: {
+                        display: true,
+                        text: selectedMonth === 'all' ? 'Monthly Expenses' : `Expenses for ${moment(selectedMonth).format('MMMM YYYY')}`,
+                        font: {
+                            size: 20,
+                            weight: 'bold'
+                        },
+                        color: '#000'
+                    }
+                }
             }
         });
+        window.myChart = myChart;
+    });
+});
+
+
+
+                            if (currentUser) {
+                                loadExpenses();
+                            } else if (window.location.pathname.includes('expenses.html')) {
+                                window.location.href = 'index.html';
+                            }
+                      

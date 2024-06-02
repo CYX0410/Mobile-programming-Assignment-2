@@ -58,6 +58,10 @@
 #summTab{
     background-color: #f3f3f3;
 }
+#summTab tr, #summTab th,#summTab td,#summTab table,#summTab tbody{
+    border: 3px solid #1c1010;
+}
+
 
 body {
     background-image: url('expic.webp');
@@ -68,3 +72,30 @@ body {
     background-color: #f3f3f3;      /* Fallback background color in case the image doesn't load */
 }
 
+#exp2{
+    font-size: 36px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    border: 10px solid whitesmoke;
+    border-radius: 10px;
+    background-color:antiquewhite;
+
+}
+
+#exp3{
+    font-size: 36px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    border: 10px solid whitesmoke;
+    border-radius: 10px;
+    background-color:antiquewhite;
+}
+
+#exp4{
+    font-size: 36px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    border: 10px solid whitesmoke;
+    border-radius: 10px;
+    background-color:antiquewhite;
+}
