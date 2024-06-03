@@ -290,11 +290,9 @@ $(document).ready(function() {
     });
 });
 
-
-
-                            if (currentUser) {
-                                loadExpenses();
-                            } else if (window.location.pathname.includes('expenses.html')) {
-                                window.location.href = 'index.html';
-                            }
+    if (currentUser) {
+        loadExpenses();
+        } else if (window.location.pathname.includes('expenses.html')) {
+             window.location.href = 'index.html';
+                }
                       
